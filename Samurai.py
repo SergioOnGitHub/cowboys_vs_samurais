@@ -21,7 +21,8 @@ class Samurai:
         self.points = np.array([[-1.0,-1.0, 1.0], [1.0,-1.0, 1.0], [1.0,-1.0,-1.0], [-1.0,-1.0,-1.0],
                                 [-1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0,-1.0], [-1.0, 1.0,-1.0]])
         self.scale = Scale
-        self.radio = math.sqrt(self.scale*self.scale + self.scale*self.scale)
+        # self.radius = math.sqrt(self.scale*self.scale + self.scale*self.scale)
+        self.radius = 20
         self.DimBoard = dim
         #Se inicializa una posicion aleatoria en el tablero
         self.Position = []
@@ -41,12 +42,28 @@ class Samurai:
         self.Direction[0] *= vel
         self.Direction[2] *= vel
         #deteccion de colision
-        self.collision = False
+        self.player_collision = False
+        self.bullet_collision = False
+
+        self.existence = True
         #arreglo de cubos
         # self.Cubos = []
 
         self.obj = OBJ("Samurai_low_poly.obj", swapyz=True)
         self.obj.generate()
+
+    def get_position(self):
+        return np.array(self.Position)
+
+    def get_radius(self):
+        return self.radius
+
+    def on_hit(self):
+        self.bullet_collision = True
+        self.existance = False
+        print("Samurai hit!")
+
+        # Handle what happens when the samurai is hit
 
 
     # def getCubos(self, Ncubos):
@@ -124,7 +141,7 @@ class Samurai:
         glRotatef(angle - 180, 0.0, 1.0, 0.0)
         glRotatef(-90.0, 1.0, 0.0, 0.0)
         # glTranslatef(0.0, 0.0, 15.0)
-        glScale(0.01, 0.01, 0.01)
+        # glScale(0.01, 0.01, 0.01)
         self.obj.render()
         glPopMatrix()
         

@@ -13,9 +13,12 @@ import math
 import sys
 sys.path.append('..')
 from Samurai import Samurai
+from Bullet import Bullet
 
 # Import obj loader
 from objloader import *
+
+import numpy as np
 
 screen_width = 1000
 screen_height = 800
@@ -26,7 +29,7 @@ ZFAR=1000.0
 #Variables para definir la posicion del observador
 #gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
 EYE_X = 0.0
-EYE_Y = 20.0
+EYE_Y = 15.0 # ALTURA
 EYE_Z = 0.0
 CENTER_X = 100
 CENTER_Y = 10
@@ -57,11 +60,17 @@ DimBoard = 250
 #cubo = Cubo(DimBoard, 1.0)
 samurais = []
 nSamurais = 20
+samurai_scale = 0.05
 # objetos = []
+
+
+bullets = []
 
 #Variables para el control del observador
 theta = 0.0
 radius = 300
+
+
 
 
 pygame.init()
@@ -107,7 +116,7 @@ def Init():
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
     
     for i in range(nSamurais):
-        samurais.append(Samurai(DimBoard, 1.0, 5.0))
+        samurais.append(Samurai(DimBoard, 1.0, samurai_scale))
         
     #glLightfv(GL_LIGHT0, GL_POSITION,  (-40, 200, 100, 0.0))
     glLightfv(GL_LIGHT0, GL_POSITION,  (0, 200, 0, 0.0))
@@ -129,7 +138,7 @@ def Init():
 #     EYE_Z = radius * (-math.sin(math.radians(theta)) + math.cos(math.radians(theta)))
 #     glLoadIdentity()
 #     gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
-    
+
 # def displayobj():
 #     glPushMatrix()  
 #     #correcciones para dibujar el objeto en plano XZ
@@ -153,8 +162,18 @@ def display():
     glEnd()
     #Se dibuja samurais
     for obj in samurais:
-        obj.draw()
-        obj.update()
+        if not (obj.bullet_collision) and obj.existence:
+            obj.draw()
+            obj.update()
+        elif not obj.existence:
+            samurais.remove(obj)
+
+    for obj in bullets:
+        if not (obj.collision) and obj.existence:
+            obj.draw()
+            obj.update()
+        elif not obj.existence:
+            bullets.remove(obj)
     
     # displayobj()
 
@@ -163,6 +182,22 @@ def playerPos():
     playerPos = [EYE_X, EYE_Y, EYE_Z]
     return playerPos
 
+def get_player_dir(yaw, pitch):
+    # Convert angles from degrees to radians
+    yaw_rad = np.radians(yaw)
+    pitch_rad = np.radians(pitch)
+
+    # Calculate the direction vector
+    direction = np.array([
+        np.cos(pitch_rad) * np.cos(yaw_rad), # x component
+        np.sin(pitch_rad),                   # y component 
+        np.cos(pitch_rad) * np.sin(yaw_rad)  # z component
+    ])
+
+    # Normalize the direction vector
+    direction /= np.linalg.norm(direction)
+
+    return direction
 
 def calculate_look_at():
     radians_yaw = math.radians(yaw)
@@ -177,11 +212,14 @@ def calculate_look_at():
     direction_y = sin_pitch
     direction_z = sin_yaw * cos_pitch
     
+    print(direction_x, direction_y, direction_z)
+
     look_at_x = EYE_X + direction_x
     look_at_y = EYE_Y + direction_y
     look_at_z = EYE_Z + direction_z
     
-    return look_at_x, look_at_y, look_at_z
+    print(look_at_x, look_at_y, look_at_z)
+    return [look_at_x, look_at_y, look_at_z]
 
 
 def handle_keyboard():
@@ -231,6 +269,7 @@ code = ""
 done = False
 Init()
 while not done:
+
     keys = pygame.key.get_pressed()
     #avanzar observador
     for event in pygame.event.get():
@@ -249,31 +288,19 @@ while not done:
                 yaw += i * mouse_sensitivity
                 pitch -= j * mouse_sensitivity
                 pitch = max(-89.0, min(89.0, pitch))
+        look_at = calculate_look_at()
+        if event.type == MOUSEBUTTONDOWN:
+            if event.button == 1:
+                bullets.append(Bullet(DimBoard, samurais, playerPos(), get_player_dir(yaw, pitch)))
+    handle_keyboard()   
 
 
-
-    handle_keyboard()
+    
     
     glLoadIdentity()
+    gluLookAt(EYE_X,EYE_Y,EYE_Z,look_at[0], look_at[1], look_at[2] ,UP_X,UP_Y,UP_Z)
 
-    look_at_x, look_at_y, look_at_z = calculate_look_at()
-    gluLookAt(EYE_X,EYE_Y,EYE_Z,look_at_x, look_at_y, look_at_z,UP_X,UP_Y,UP_Z)
-
-    print(playerPos())
-    
-    # if keys[pygame.K_RIGHT]:
-    #     if theta > 359.0:
-    #         theta = 0
-    #     else:
-    #         theta += 1.0
-    #     lookat()        
-    # if keys[pygame.K_LEFT]:
-    #     if theta < 1.0:
-    #         theta = 360.0
-    #     else:
-    #         theta += -1.0
-    #     lookat()        
-    
+    # print(playerPos())
 
     display()
 
