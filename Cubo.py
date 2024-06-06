@@ -4,6 +4,8 @@
 import pygame
 from pygame.locals import *
 
+from objloader import OBJ
+
 # Cargamos las bibliotecas de OpenGL
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -24,7 +26,7 @@ class Cubo:
         #Se inicializa una posicion aleatoria en el tablero
         self.Position = []
         self.Position.append(random.randint(-1 * self.DimBoard, self.DimBoard))
-        self.Position.append(self.scale)
+        self.Position.append(0) # ALTURA DE LOS OBJETOS
         self.Position.append(random.randint(-1 * self.DimBoard, self.DimBoard))
         #Se inicializa un vector de direccion aleatorio
         self.Direction = []
@@ -43,6 +45,10 @@ class Cubo:
         #arreglo de cubos
         self.Cubos = []
 
+        self.obj = OBJ("Samurai_low_poly.obj", swapyz=True)
+        self.obj.generate()
+
+
     def getCubos(self, Ncubos):
         self.Cubos = Ncubos
 
@@ -55,12 +61,21 @@ class Cubo:
         else:
             self.Direction[0] *= -1.0
             self.Position[0] += self.Direction[0]
+
         
         if(abs(new_z) <= self.DimBoard):
             self.Position[2] = new_z
         else:
             self.Direction[2] *= -1.0
             self.Position[2] += self.Direction[2]
+
+
+    def calculateRotationAngle(self):
+        # Calculate the angle in degrees between the direction vector and the positive z-axis
+        angle = math.degrees(math.atan2(self.Direction[0], self.Direction[2]))
+        return angle
+    
+
 
     def drawFaces(self):
         glBegin(GL_QUADS)
@@ -105,7 +120,12 @@ class Cubo:
         glTranslatef(self.Position[0], self.Position[1], self.Position[2])
         glScaled(self.scale,self.scale,self.scale)
         glColor3f(1.0, 1.0, 1.0)
-        self.drawFaces()
+        angle = self.calculateRotationAngle()
+        glRotatef(angle - 180, 0.0, 1.0, 0.0)
+        glRotatef(-90.0, 1.0, 0.0, 0.0)
+        # glTranslatef(0.0, 0.0, 15.0)
+        glScale(0.01, 0.01, 0.01)
+        self.obj.render()
         glPopMatrix()
         
-                
+        
