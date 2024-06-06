@@ -15,7 +15,7 @@ import numpy as np
 import random
 import math
 
-class Cubo:
+class Samurai:
     
     def __init__(self, dim, vel, Scale):
         self.points = np.array([[-1.0,-1.0, 1.0], [1.0,-1.0, 1.0], [1.0,-1.0,-1.0], [-1.0,-1.0,-1.0],
@@ -43,14 +43,14 @@ class Cubo:
         #deteccion de colision
         self.collision = False
         #arreglo de cubos
-        self.Cubos = []
+        # self.Cubos = []
 
         self.obj = OBJ("Samurai_low_poly.obj", swapyz=True)
         self.obj.generate()
 
 
-    def getCubos(self, Ncubos):
-        self.Cubos = Ncubos
+    # def getCubos(self, Ncubos):
+    #     self.Cubos = Ncubos
 
     def update(self):
         new_x = self.Position[0] + self.Direction[0]

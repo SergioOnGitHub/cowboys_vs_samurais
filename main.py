@@ -12,7 +12,7 @@ import math
 # Se carga el archivo de la clase Cubo
 import sys
 sys.path.append('..')
-from Cubo import Cubo
+from Samurai import Samurai
 
 # Import obj loader
 from objloader import *
@@ -26,7 +26,7 @@ ZFAR=1000.0
 #Variables para definir la posicion del observador
 #gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
 EYE_X = 0.0
-EYE_Y = 10.0
+EYE_Y = 20.0
 EYE_Z = 0.0
 CENTER_X = 100
 CENTER_Y = 10
@@ -51,12 +51,12 @@ mouse_sensitivity = 0.5
 movement_speed = 5 # How many pixels does it move by iteration and key down
 
 #Dimension del plano
-DimBoard = 200
+DimBoard = 250
 
 #Variables asociados a los objetos de la clase Cubo
 #cubo = Cubo(DimBoard, 1.0)
-cubos = []
-ncubos = 20
+samurais = []
+nSamurais = 20
 # objetos = []
 
 #Variables para el control del observador
@@ -93,7 +93,7 @@ def Axis():
 def Init():
     screen = pygame.display.set_mode(
         (screen_width, screen_height), DOUBLEBUF | OPENGL)
-    pygame.display.set_caption("OpenGL: cubos")
+    pygame.display.set_caption("Cowboy vs Samurai")
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
@@ -106,11 +106,8 @@ def Init():
     glEnable(GL_DEPTH_TEST)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
     
-    for i in range(ncubos):
-        cubos.append(Cubo(DimBoard, 1.0, 5.0))
-    #se le pasan a los objetos el arreglo de cubos
-    for obj in cubos:
-        obj.getCubos(cubos)
+    for i in range(nSamurais):
+        samurais.append(Samurai(DimBoard, 1.0, 5.0))
         
     #glLightfv(GL_LIGHT0, GL_POSITION,  (-40, 200, 100, 0.0))
     glLightfv(GL_LIGHT0, GL_POSITION,  (0, 200, 0, 0.0))
@@ -154,8 +151,8 @@ def display():
     glVertex3d(DimBoard, 0, DimBoard)
     glVertex3d(DimBoard, 0, -DimBoard)
     glEnd()
-    #Se dibuja cubos
-    for obj in cubos:
+    #Se dibuja samurais
+    for obj in samurais:
         obj.draw()
         obj.update()
     
