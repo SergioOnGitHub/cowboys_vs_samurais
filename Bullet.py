@@ -12,7 +12,7 @@ import numpy as np
 
 
 class Bullet:
-    def __init__(self, dim, samurais, playerPos, playerDir):
+    def __init__(self, dim, samurais, playerPos, playerDir, shooting_sound):
         #Se inicializa las coordenadas de los vertices del cubo
         self.points = np.array([[-1.0,-1.0, 1.0], [1.0,-1.0, 1.0], [1.0,-1.0,-1.0], [-1.0,-1.0,-1.0],
                                 [-1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0,-1.0], [-1.0, 1.0,-1.0]])
@@ -39,6 +39,8 @@ class Bullet:
 
         #Se cambia la maginitud del vector direccion
         self.collision = False
+
+        shooting_sound.play()
 
     def getPosition(self):
         return self.Position
