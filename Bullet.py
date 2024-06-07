@@ -12,7 +12,6 @@ import numpy as np
 
 
 class Bullet:
-    
     def __init__(self, dim, samurais, playerPos, playerDir):
         #Se inicializa las coordenadas de los vertices del cubo
         self.points = np.array([[-1.0,-1.0, 1.0], [1.0,-1.0, 1.0], [1.0,-1.0,-1.0], [-1.0,-1.0,-1.0],
@@ -52,17 +51,24 @@ class Bullet:
             distance = np.linalg.norm(self.Position - samurai_pos)
             if distance < self.radius + samurai_radius:
                 self.existence = False
+                print("Colision detected: ", self.Position)
+                print("Distancia: ", distance)
+                
                 samurai.on_hit()  # Assuming samurais have an on_hit method
                 break
 
 
     def update(self):
         if self.existence:
-            print(self.Position, self.Direction)
+            # print(self.Position, self.Direction)
 
             self.Position += self.Direction
             if np.any(np.abs(self.Position) > self.DimBoard):
                 self.existence = False
+
+                print("Posición al chocar con el borde: ", self.Position)
+
+        
             self.colisionDetection()
 
     def drawFaces(self):

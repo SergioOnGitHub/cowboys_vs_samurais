@@ -49,7 +49,7 @@ Z_MAX=500
 yaw = 0.0 # Yaw rotates around the y-axis (vertical axis). This changes the direction on the xz-plane.
 pitch = 0.0 # Pitch rotates around the x-axis (lateral axis). This changes the vertical direction (y-axis).
 
-mouse_sensitivity = 0.5
+mouse_sensitivity = 1
 
 movement_speed = 5 # How many pixels does it move by iteration and key down
 
@@ -163,10 +163,12 @@ def display():
     #Se dibuja samurais
     for obj in samurais:
         if not (obj.bullet_collision) and obj.existence:
+        # if obj.existence:
             obj.draw()
             obj.update()
         elif not obj.existence:
             samurais.remove(obj)
+            print("Numero de samurais: ", len(samurais))
 
     for obj in bullets:
         if not (obj.collision) and obj.existence:
@@ -174,6 +176,7 @@ def display():
             obj.update()
         elif not obj.existence:
             bullets.remove(obj)
+
     
     # displayobj()
 
@@ -212,13 +215,13 @@ def calculate_look_at():
     direction_y = sin_pitch
     direction_z = sin_yaw * cos_pitch
     
-    print(direction_x, direction_y, direction_z)
+    # print(direction_x, direction_y, direction_z)
 
     look_at_x = EYE_X + direction_x
     look_at_y = EYE_Y + direction_y
     look_at_z = EYE_Z + direction_z
     
-    print(look_at_x, look_at_y, look_at_z)
+    # print(look_at_x, look_at_y, look_at_z)
     return [look_at_x, look_at_y, look_at_z]
 
 
@@ -263,7 +266,7 @@ zpos = 5
 ubiX = 0
 ubiZ = 0
 
-rotate = move = False
+rotate = move = True
 code = ""
 
 done = False
@@ -288,11 +291,12 @@ while not done:
                 yaw += i * mouse_sensitivity
                 pitch -= j * mouse_sensitivity
                 pitch = max(-89.0, min(89.0, pitch))
-        look_at = calculate_look_at()
+
         if event.type == MOUSEBUTTONDOWN:
             if event.button == 1:
                 bullets.append(Bullet(DimBoard, samurais, playerPos(), get_player_dir(yaw, pitch)))
-    handle_keyboard()   
+    handle_keyboard()
+    look_at = calculate_look_at()
 
 
     

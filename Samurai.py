@@ -60,7 +60,8 @@ class Samurai:
 
     def on_hit(self):
         self.bullet_collision = True
-        self.existance = False
+        self.existence = False
+        print("Samurai Position: ", self.Position)
         print("Samurai hit!")
 
         # Handle what happens when the samurai is hit
