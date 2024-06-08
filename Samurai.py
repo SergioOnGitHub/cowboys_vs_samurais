@@ -12,16 +12,11 @@ import math
 
 class Samurai:
     def __init__(self, dim, scale):
-        # Initialize the coordinates of the cube vertices
-        self.points = np.array([
-            [-1.0, -1.0,  1.0], [ 1.0, -1.0,  1.0], [ 1.0, -1.0, -1.0], [-1.0, -1.0, -1.0],
-            [-1.0,  1.0,  1.0], [ 1.0,  1.0,  1.0], [ 1.0,  1.0, -1.0], [-1.0,  1.0, -1.0]
-        ])
         self.scale = scale
-        self.radius = 20
+        self.hitbox = 22
         self.DimBoard = dim
         self.vel = 2
-        self.Position = [random.randint(-1 * self.DimBoard, self.DimBoard), 0, random.randint(-1 * self.DimBoard, self.DimBoard)]
+        self.Position = self.generate_position_near_border()
         self.Direction = [random.random(), self.scale, random.random()]
         self.Direction[0] /= math.sqrt(self.Direction[0]**2 + self.Direction[2]**2)
         self.Direction[2] /= math.sqrt(self.Direction[0]**2 + self.Direction[2]**2)
@@ -30,15 +25,22 @@ class Samurai:
         self.player_collision = False
         self.bullet_collision = False
         self.existence = True
-        self.activation_zone = 100
+        self.activation_zone = 150
         self.obj = OBJ("Samurai_low_poly.obj", swapyz=True)
         self.obj.generate()
+
+
+    def generate_position_near_border(self):
+        x = random.randint(self.DimBoard * 0.5, self.DimBoard) * random.choice([1, -1])
+        z = random.randint(self.DimBoard *0.5, self.DimBoard) * random.choice([1, -1])
+        return [x, 0, z]
+
 
     def get_position(self):
         return np.array(self.Position)
 
-    def get_radius(self):
-        return self.radius
+    def get_hitbox(self):
+        return self.hitbox
 
     def on_hit(self):
         self.bullet_collision = True
@@ -48,9 +50,9 @@ class Samurai:
 
         # Handle what happens when the samurai is hit
 
-    def collisionDetection(self, playerPosition, playerRadius):
+    def collisionDetection(self, playerPosition, playerHitbox):
         distance = np.linalg.norm(self.get_position() - playerPosition)
-        if distance < self.radius + playerRadius:
+        if distance < self.hitbox + playerHitbox:
             print("Player has lost")
             return True
         return False
@@ -60,7 +62,7 @@ class Samurai:
         distance = np.linalg.norm(self.get_position() - playerPosition)
         return distance < self.activation_zone
         
-    def update(self, playerPosition, playerDirection, playerRadius):
+    def update(self, playerPosition, playerDirection, playerHitbox):
         if self.activate_zone(np.array(playerPosition)):
             self.Direction = np.array(playerDirection) * -1
             self.Direction /= np.linalg.norm(self.Direction)
@@ -80,7 +82,7 @@ class Samurai:
             else:
                 self.Direction[2] *= -1.0
                 self.Position[2] += self.Direction[2]
-        self.collisionDetection(playerPosition, playerRadius)
+        self.collisionDetection(playerPosition, playerHitbox)
 
     def calculateRotationAngle(self):
         # Calculate the angle in degrees between the direction vector and the positive z-axis

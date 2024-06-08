@@ -59,7 +59,7 @@ Z_MAX = 500
 # Camera movement settings
 yaw = 0.0
 pitch = 0.0
-radius = 10
+playerHitbox = 10
 mouse_sensitivity = 1
 movement_speed = 3
 
@@ -148,7 +148,7 @@ def display():
     for obj in samurais:
         if not obj.bullet_collision and obj.existence:
             obj.draw()
-            obj.update(get_player_position(), get_player_dir(yaw, pitch), radius)
+            obj.update(get_player_position(), get_player_dir(yaw, pitch), playerHitbox)
         elif not obj.existence:
             samurais.remove(obj)
             print("Number of samurais: ", len(samurais))

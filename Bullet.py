@@ -16,7 +16,7 @@ class Bullet:
             [-1.0, -1.0,  1.0], [ 1.0, -1.0,  1.0], [ 1.0, -1.0, -1.0], [-1.0, -1.0, -1.0],
             [-1.0,  1.0,  1.0], [ 1.0,  1.0,  1.0], [ 1.0,  1.0, -1.0], [-1.0,  1.0, -1.0]
         ])
-        self.radius = 5
+        self.hitbox = 1
         self.vel = 8
         self.DimBoard = dim
 
@@ -36,11 +36,11 @@ class Bullet:
         
     def collisionDetection(self):
         for samurai in self.samurais:
-            samurai_pos = samurai.get_position()  # Assuming samurais have a get_position method
-            samurai_radius = samurai.get_radius()  # Assuming samurais have a get_radius method
+            samurai_pos = samurai.get_position()
+            samurai_hitbox = samurai.get_hitbox()
 
             distance = np.linalg.norm(self.Position - samurai_pos)
-            if distance < self.radius + samurai_radius:
+            if distance < self.hitbox + samurai_hitbox:
                 self.existence = False
                 print("Collision detected: ", self.Position)
                 print("Distance: ", distance)
