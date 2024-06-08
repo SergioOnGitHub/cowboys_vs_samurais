@@ -32,7 +32,7 @@ class Bullet:
     def getPosition(self):
         return self.Position
         
-    def colisionDetection(self):
+    def collisionDetection(self):
         for samurai in self.samurais:
             samurai_pos = samurai.get_position()  # Assuming samurais have a get_position method
             samurai_radius = samurai.get_radius()  # Assuming samurais have a get_radius method
@@ -40,25 +40,19 @@ class Bullet:
             distance = np.linalg.norm(self.Position - samurai_pos)
             if distance < self.radius + samurai_radius:
                 self.existence = False
-                print("Colision detected: ", self.Position)
-                print("Distancia: ", distance)
-                
+                print("Collision detected: ", self.Position)
+                print("Distance: ", distance)
                 samurai.on_hit()  # Assuming samurais have an on_hit method
                 break
 
 
     def update(self):
         if self.existence:
-            # print(self.Position, self.Direction)
-
             self.Position += self.Direction
             if np.any(np.abs(self.Position) > self.DimBoard):
                 self.existence = False
-
-                print("Posición al chocar con el borde: ", self.Position)
-
-        
-            self.colisionDetection()
+                print("Position at boundary collision: ", self.Position)
+            self.collisionDetection()
 
     def drawFaces(self):
         glBegin(GL_QUADS)
@@ -101,7 +95,7 @@ class Bullet:
     def draw(self):
         glPushMatrix()
         glTranslatef(self.Position[0], self.Position[1], self.Position[2])
-        glScaled(0.5,0.5,0.5)
+        glScaled(0.5, 0.5, 0.5)
         glColor3f(1, 1, 0)
         self.drawFaces()
         glPopMatrix()
