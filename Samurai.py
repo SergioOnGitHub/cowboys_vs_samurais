@@ -1,12 +1,7 @@
-#Autor: Ivan Olmos Pineda
-
-
 import pygame
 from pygame.locals import *
 
 from objloader import OBJ
-
-# Cargamos las bibliotecas de OpenGL
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
@@ -16,44 +11,26 @@ import random
 import math
 
 class Samurai:
-    
-    def __init__(self, dim, Scale):
-        self.points = np.array([[-1.0,-1.0, 1.0], [1.0,-1.0, 1.0], [1.0,-1.0,-1.0], [-1.0,-1.0,-1.0],
-                                [-1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0,-1.0], [-1.0, 1.0,-1.0]])
-        self.scale = Scale
-        # self.radius = math.sqrt(self.scale*self.scale + self.scale*self.scale)
+    def __init__(self, dim, scale):
+        # Initialize the coordinates of the cube vertices
+        self.points = np.array([
+            [-1.0, -1.0,  1.0], [ 1.0, -1.0,  1.0], [ 1.0, -1.0, -1.0], [-1.0, -1.0, -1.0],
+            [-1.0,  1.0,  1.0], [ 1.0,  1.0,  1.0], [ 1.0,  1.0, -1.0], [-1.0,  1.0, -1.0]
+        ])
+        self.scale = scale
         self.radius = 20
         self.DimBoard = dim
-
         self.vel = 2
-        #Se inicializa una posicion aleatoria en el tablero
-        self.Position = []
-        self.Position.append(random.randint(-1 * self.DimBoard, self.DimBoard))
-        self.Position.append(0) # ALTURA DE LOS OBJETOS
-        self.Position.append(random.randint(-1 * self.DimBoard, self.DimBoard))
-        #Se inicializa un vector de direccion aleatorio
-        self.Direction = []
-        self.Direction.append(random.random())
-        self.Direction.append(self.scale)
-        self.Direction.append(random.random())
-        #Se normaliza el vector de direccion
-        m = math.sqrt(self.Direction[0]*self.Direction[0] + self.Direction[2]*self.Direction[2])
-        self.Direction[0] /= m
-        self.Direction[2] /= m
-        #Se cambia la maginitud del vector direccion
+        self.Position = [random.randint(-1 * self.DimBoard, self.DimBoard), 0, random.randint(-1 * self.DimBoard, self.DimBoard)]
+        self.Direction = [random.random(), self.scale, random.random()]
+        self.Direction[0] /= math.sqrt(self.Direction[0]**2 + self.Direction[2]**2)
+        self.Direction[2] /= math.sqrt(self.Direction[0]**2 + self.Direction[2]**2)
         self.Direction[0] *= self.vel
         self.Direction[2] *= self.vel
-        #deteccion de colision
         self.player_collision = False
         self.bullet_collision = False
-
         self.existence = True
-
-
         self.activation_zone = 100
-        #arreglo de cubos
-        # self.Cubos = []
-
         self.obj = OBJ("Samurai_low_poly.obj", swapyz=True)
         self.obj.generate()
 
@@ -71,96 +48,44 @@ class Samurai:
 
         # Handle what happens when the samurai is hit
 
-    def colissionDetection(self, playerPosition, playerRadius):
-        distance = np.linalg.norm(self.Position - playerPosition)
+    def collisionDetection(self, playerPosition, playerRadius):
+        distance = np.linalg.norm(self.get_position() - playerPosition)
         if distance < self.radius + playerRadius:
-            print("Player has loose")
+            print("Player has lost")
             return True
+        return False
         
 
     def activate_zone(self, playerPosition):
-        distance = np.linalg.norm(self.Position - playerPosition)
-        if distance < self.activation_zone:
-            return True
+        distance = np.linalg.norm(self.get_position() - playerPosition)
+        return distance < self.activation_zone
         
-
-
-    # def getCubos(self, Ncubos):
-    #     self.Cubos = Ncubos
-
     def update(self, playerPosition, playerDirection, playerRadius):
-        if(self.activate_zone(np.array(playerPosition))):
+        if self.activate_zone(np.array(playerPosition)):
             self.Direction = np.array(playerDirection) * -1
-            self.Direction = self.Direction / np.linalg.norm(self.Direction)
+            self.Direction /= np.linalg.norm(self.Direction)
             self.Direction *= self.vel
-
-            self.Position[0] = self.Position[0] + self.Direction[0]
-            self.Position[2] = self.Position[2] + self.Direction[2]
-
+            self.Position[0] += self.Direction[0]
+            self.Position[2] += self.Direction[2]
         else:
             new_x = self.Position[0] + self.Direction[0]
             new_z = self.Position[2] + self.Direction[2]
-            
-            if(abs(new_x) <= self.DimBoard):
+            if abs(new_x) <= self.DimBoard:
                 self.Position[0] = new_x
             else:
                 self.Direction[0] *= -1.0
                 self.Position[0] += self.Direction[0]
-
-            
-            if(abs(new_z) <= self.DimBoard):
+            if abs(new_z) <= self.DimBoard:
                 self.Position[2] = new_z
             else:
                 self.Direction[2] *= -1.0
                 self.Position[2] += self.Direction[2]
-
-        self.colissionDetection(playerPosition, playerRadius)
-
+        self.collisionDetection(playerPosition, playerRadius)
 
     def calculateRotationAngle(self):
         # Calculate the angle in degrees between the direction vector and the positive z-axis
         angle = math.degrees(math.atan2(self.Direction[0], self.Direction[2]))
         return angle
-    
-
-
-    def drawFaces(self):
-        glBegin(GL_QUADS)
-        glVertex3fv(self.points[0])
-        glVertex3fv(self.points[1])
-        glVertex3fv(self.points[2])
-        glVertex3fv(self.points[3])
-        glEnd()
-        glBegin(GL_QUADS)
-        glVertex3fv(self.points[4])
-        glVertex3fv(self.points[5])
-        glVertex3fv(self.points[6])
-        glVertex3fv(self.points[7])
-        glEnd()
-        glBegin(GL_QUADS)
-        glVertex3fv(self.points[0])
-        glVertex3fv(self.points[1])
-        glVertex3fv(self.points[5])
-        glVertex3fv(self.points[4])
-        glEnd()
-        glBegin(GL_QUADS)
-        glVertex3fv(self.points[1])
-        glVertex3fv(self.points[2])
-        glVertex3fv(self.points[6])
-        glVertex3fv(self.points[5])
-        glEnd()
-        glBegin(GL_QUADS)
-        glVertex3fv(self.points[2])
-        glVertex3fv(self.points[3])
-        glVertex3fv(self.points[7])
-        glVertex3fv(self.points[6])
-        glEnd()
-        glBegin(GL_QUADS)
-        glVertex3fv(self.points[3])
-        glVertex3fv(self.points[0])
-        glVertex3fv(self.points[4])
-        glVertex3fv(self.points[7])
-        glEnd()
     
     def draw(self):
         glPushMatrix()
