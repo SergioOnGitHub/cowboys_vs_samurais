@@ -17,7 +17,7 @@ class Bullet:
         self.points = np.array([[-1.0,-1.0, 1.0], [1.0,-1.0, 1.0], [1.0,-1.0,-1.0], [-1.0,-1.0,-1.0],
                                 [-1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0,-1.0], [-1.0, 1.0,-1.0]])
         self.radius = 5
-        self.vel = 5
+        self.vel = 8
         self.existence = True
         self.samurais = samurais
         #Se inicializa la dimension del tableros

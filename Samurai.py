@@ -17,13 +17,15 @@ import math
 
 class Samurai:
     
-    def __init__(self, dim, vel, Scale):
+    def __init__(self, dim, Scale):
         self.points = np.array([[-1.0,-1.0, 1.0], [1.0,-1.0, 1.0], [1.0,-1.0,-1.0], [-1.0,-1.0,-1.0],
                                 [-1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0,-1.0], [-1.0, 1.0,-1.0]])
         self.scale = Scale
         # self.radius = math.sqrt(self.scale*self.scale + self.scale*self.scale)
         self.radius = 20
         self.DimBoard = dim
+
+        self.vel = 2
         #Se inicializa una posicion aleatoria en el tablero
         self.Position = []
         self.Position.append(random.randint(-1 * self.DimBoard, self.DimBoard))
@@ -39,13 +41,16 @@ class Samurai:
         self.Direction[0] /= m
         self.Direction[2] /= m
         #Se cambia la maginitud del vector direccion
-        self.Direction[0] *= vel
-        self.Direction[2] *= vel
+        self.Direction[0] *= self.vel
+        self.Direction[2] *= self.vel
         #deteccion de colision
         self.player_collision = False
         self.bullet_collision = False
 
         self.existence = True
+
+
+        self.activation_zone = 100
         #arreglo de cubos
         # self.Cubos = []
 
@@ -66,26 +71,50 @@ class Samurai:
 
         # Handle what happens when the samurai is hit
 
+    def colissionDetection(self, playerPosition, playerRadius):
+        distance = np.linalg.norm(self.Position - playerPosition)
+        if distance < self.radius + playerRadius:
+            print("Player has loose")
+            return True
+        
+
+    def activate_zone(self, playerPosition):
+        distance = np.linalg.norm(self.Position - playerPosition)
+        if distance < self.activation_zone:
+            return True
+        
+
 
     # def getCubos(self, Ncubos):
     #     self.Cubos = Ncubos
 
-    def update(self):
-        new_x = self.Position[0] + self.Direction[0]
-        new_z = self.Position[2] + self.Direction[2]
-        
-        if(abs(new_x) <= self.DimBoard):
-            self.Position[0] = new_x
-        else:
-            self.Direction[0] *= -1.0
-            self.Position[0] += self.Direction[0]
+    def update(self, playerPosition, playerDirection, playerRadius):
+        if(self.activate_zone(np.array(playerPosition))):
+            self.Direction = np.array(playerDirection) * -1
+            self.Direction = self.Direction / np.linalg.norm(self.Direction)
+            self.Direction *= self.vel
 
-        
-        if(abs(new_z) <= self.DimBoard):
-            self.Position[2] = new_z
+            self.Position[0] = self.Position[0] + self.Direction[0]
+            self.Position[2] = self.Position[2] + self.Direction[2]
+
         else:
-            self.Direction[2] *= -1.0
-            self.Position[2] += self.Direction[2]
+            new_x = self.Position[0] + self.Direction[0]
+            new_z = self.Position[2] + self.Direction[2]
+            
+            if(abs(new_x) <= self.DimBoard):
+                self.Position[0] = new_x
+            else:
+                self.Direction[0] *= -1.0
+                self.Position[0] += self.Direction[0]
+
+            
+            if(abs(new_z) <= self.DimBoard):
+                self.Position[2] = new_z
+            else:
+                self.Direction[2] *= -1.0
+                self.Position[2] += self.Direction[2]
+
+        self.colissionDetection(playerPosition, playerRadius)
 
 
     def calculateRotationAngle(self):

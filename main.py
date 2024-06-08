@@ -61,12 +61,14 @@ Z_MAX=500
 yaw = 0.0 # Yaw rotates around the y-axis (vertical axis). This changes the direction on the xz-plane.
 pitch = 0.0 # Pitch rotates around the x-axis (lateral axis). This changes the vertical direction (y-axis).
 
+radius = 10
+
 mouse_sensitivity = 1
 
-movement_speed = 5 # How many pixels does it move by iteration and key down
+movement_speed = 3 # How many pixels does it move by iteration and key down
 
 #Dimension del plano
-DimBoard = 250
+DimBoard = 400
 
 #Variables asociados a los objetos de la clase Cubo
 #cubo = Cubo(DimBoard, 1.0)
@@ -80,7 +82,6 @@ bullets = []
 
 #Variables para el control del observador
 theta = 0.0
-radius = 300
 
 
 
@@ -128,7 +129,7 @@ def Init():
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
     
     for i in range(nSamurais):
-        samurais.append(Samurai(DimBoard, 1.0, samurai_scale))
+        samurais.append(Samurai(DimBoard, samurai_scale))
         
     #glLightfv(GL_LIGHT0, GL_POSITION,  (-40, 200, 100, 0.0))
     glLightfv(GL_LIGHT0, GL_POSITION,  (0, 200, 0, 0.0))
@@ -162,6 +163,7 @@ def Init():
 #     glPopMatrix()
     
 def display():
+    global radius, yaw, pitch
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
     #Se dibuja el plano gris
@@ -177,7 +179,7 @@ def display():
         if not (obj.bullet_collision) and obj.existence:
         # if obj.existence:
             obj.draw()
-            obj.update()
+            obj.update(playerPos(), get_player_dir(yaw, pitch), radius)
         elif not obj.existence:
             samurais.remove(obj)
             print("Numero de samurais: ", len(samurais))
@@ -195,7 +197,7 @@ def display():
 
 def playerPos():
     playerPos = [EYE_X, EYE_Y, EYE_Z]
-    return playerPos
+    return np.array(playerPos)
 
 def get_player_dir(yaw, pitch):
     # Convert angles from degrees to radians
