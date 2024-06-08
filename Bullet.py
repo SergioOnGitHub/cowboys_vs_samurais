@@ -1,45 +1,32 @@
 import pygame
 from pygame.locals import *
-
-# Cargamos las bibliotecas de OpenGL
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-
-import random
-import math
 import numpy as np
+import math
 
 
 class Bullet:
     def __init__(self, dim, samurais, playerPos, playerDir, shooting_sound):
-        #Se inicializa las coordenadas de los vertices del cubo
-        self.points = np.array([[-1.0,-1.0, 1.0], [1.0,-1.0, 1.0], [1.0,-1.0,-1.0], [-1.0,-1.0,-1.0],
-                                [-1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0,-1.0], [-1.0, 1.0,-1.0]])
+        # Initialize the coordinates of the cube vertices
+        self.points = np.array([
+            [-1.0, -1.0,  1.0], [ 1.0, -1.0,  1.0], [ 1.0, -1.0, -1.0], [-1.0, -1.0, -1.0],
+            [-1.0,  1.0,  1.0], [ 1.0,  1.0,  1.0], [ 1.0,  1.0, -1.0], [-1.0,  1.0, -1.0]
+        ])
         self.radius = 5
         self.vel = 8
-        self.existence = True
-        self.samurais = samurais
-        #Se inicializa la dimension del tableros
         self.DimBoard = dim
-        #Se inicializa una posicion aleatoria en el tablero
+
         self.Position = np.array(playerPos)
         self.Position[1] -= 2
-        # self.Position.append(random.randint(-1 * self.DimBoard, self.DimBoard))
-        # self.Position.append(5.0)
-        # self.Position.append(random.randint(-1 * self.DimBoard, self.DimBoard))
-        #Se inicializa un vector de direccion aleatorio
+
         self.Direction = np.array(playerDir)
         self.Direction = self.Direction / np.linalg.norm(self.Direction)
         self.Direction *= self.vel
-        # self.Direction.append(random.random())
-        # self.Direction.append(5.0)
-        # self.Direction.append(random.random())
-        # #Se normaliza el vector de direccion
-
-        #Se cambia la maginitud del vector direccion
         self.collision = False
-
+        self.existence = True
+        self.samurais = samurais
         shooting_sound.play()
 
     def getPosition(self):

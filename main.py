@@ -24,13 +24,13 @@ pygame.init()
 pygame.mixer.init()
 
 # Load and play the music
-pygame.mixer.music.load("RDE_american_venom.mp3")  # Replace with your music file path
-pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.load("RDR_american_venom.mp3")  # Replace with your music file path
+pygame.mixer.music.set_volume(0)
 pygame.mixer.music.play(-1)  # Loop indefinitely
 
 # Load the shooting sound effect
 shooting_sound = pygame.mixer.Sound("gun_shot.mp3")
-shooting_sound.set_volume(0.5) # Set the volume for the sound effect
+shooting_sound.set_volume(0) # Set the volume for the sound effect
 
 screen_width = 1000
 screen_height = 800
