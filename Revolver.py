@@ -14,6 +14,7 @@ class Revolver:
     def __init__(self, scale, playerPosition, playerDirection):
         self.scale = scale
         self.distance = 2
+        self.offset = 0.75
         self.hitbox = 12
         self.Direction = playerDirection
         self.Direction = self.Direction / np.linalg.norm(self.Direction)
@@ -48,17 +49,25 @@ class Revolver:
         angle = math.degrees(math.atan(self.Direction[1] / self.Direction[2]))  # Using atan for YZ plane
         return angle
     
-    def draw(self):
+
+    def draw(self, look_at):
         glPushMatrix()
-        glTranslatef(self.Position[0], self.Position[1] - 0.75, self.Position[2])
+        glTranslatef(self.Position[0], self.Position[1] - self.offset, self.Position[2])
         glScaled(self.scale,self.scale,self.scale)
         glColor3f(1.0, 1.0, 1.0)
         angleXZ = self.calculateRotationAngleXZ()
         angleYZ = self.calculateRotationAngleYZ()
         angleXY = self.calculateRotationAngleXY()
         glRotatef(angleXZ - 90, 0.0, 1.0, 0.0)
-        # glRotatef(angleYZ, 1.0, 0.0, 0.0)
+        pitch = math.degrees(look_at)
+        glRotatef(pitch - 140.2, 0.0, 0.0, 1.0)
 
+        print("Angle YZ: ", angleYZ)
+        print("Angle XY: ", angleXY)
+        print()
+        # glRotatef(angleYZ, 1.0, 0.0, 0.0)
+        # Angle YZ:  -1.0306071244579675
+        # Angle XY:  85.87316606283942
         # glRotatef(-90.0, 1.0, 0.0, 0.0)
         self.obj.render()
         glPopMatrix()

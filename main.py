@@ -161,7 +161,7 @@ def display():
             print("Number of samurais: ", len(samurais))
             
     revolver[0].update(get_player_position(), get_player_dir(yaw, pitch))
-    revolver[0].draw()
+    revolver[0].draw(look_at[1])
 
     # Draw bullets
     for obj in bullets:
@@ -252,7 +252,7 @@ while not done:
                 i, j = event.rel
                 yaw += i * mouse_sensitivity
                 pitch -= j * mouse_sensitivity
-                pitch = max(-89.0, min(89.0, pitch))
+                pitch = max(-89.0, min(40.0, pitch))
 
         if event.type == MOUSEBUTTONDOWN:
             if event.button == 1:
