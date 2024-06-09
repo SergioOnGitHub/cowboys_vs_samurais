@@ -13,6 +13,7 @@ import numpy as np
 
 # Se carga el archivo de la clase Samurai y Bullet
 from Samurai import Samurai
+from Revolver import Revolver
 from Bullet import Bullet
 
 # Initialize Pygame
@@ -21,12 +22,12 @@ pygame.mixer.init()
 
 # Load and play the music
 pygame.mixer.music.load("RDR_american_venom.mp3")
-pygame.mixer.music.set_volume(0)
+pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)  # Loop indefinitely
 
 # Load the shooting sound effect
 shooting_sound = pygame.mixer.Sound("gun_shot.mp3")
-shooting_sound.set_volume(0)  # Set the volume for the sound effect
+shooting_sound.set_volume(0.5)  # Set the volume for the sound effect
 
 # Screen settings
 screen_width = 1000
@@ -70,6 +71,10 @@ DimBoard = 400
 samurais = []
 nSamurais = 20
 samurai_scale = 0.05
+
+# Bullets
+revolver = []
+revolverScale = 0.5
 
 # Bullets
 bullets = []
@@ -118,6 +123,8 @@ def Init():
     glEnable(GL_DEPTH_TEST)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
+
+    revolver.append(Revolver(revolverScale, get_player_position(), get_player_dir(yaw, pitch)))
     for _ in range(nSamurais):
         samurais.append(Samurai(DimBoard, samurai_scale))
 
@@ -152,6 +159,9 @@ def display():
         elif not obj.existence:
             samurais.remove(obj)
             print("Number of samurais: ", len(samurais))
+            
+    revolver[0].update(get_player_position(), get_player_dir(yaw, pitch))
+    revolver[0].draw()
 
     # Draw bullets
     for obj in bullets:

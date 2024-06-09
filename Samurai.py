@@ -13,11 +13,11 @@ import math
 class Samurai:
     def __init__(self, dim, scale):
         self.scale = scale
-        self.hitbox = 22
+        self.hitbox = 12
         self.DimBoard = dim
-        self.vel = 2
+        self.vel = 0
         self.Position = self.generate_position_near_border()
-        self.Direction = [random.random(), self.scale, random.random()]
+        self.Direction = [random.random(), 0, random.random()]
         self.Direction[0] /= math.sqrt(self.Direction[0]**2 + self.Direction[2]**2)
         self.Direction[2] /= math.sqrt(self.Direction[0]**2 + self.Direction[2]**2)
         self.Direction[0] *= self.vel

@@ -21,7 +21,7 @@ class Bullet:
         self.DimBoard = dim
 
         self.Position = np.array(playerPos)
-        self.Position[1] -= 2
+        self.Position[1] -= 1
 
         self.Direction = np.array(playerDir)
         self.Direction = self.Direction / np.linalg.norm(self.Direction)
@@ -37,6 +37,7 @@ class Bullet:
     def collisionDetection(self):
         for samurai in self.samurais:
             samurai_pos = samurai.get_position()
+            samurai_pos[1] += 13 #Altura del hitbox
             samurai_hitbox = samurai.get_hitbox()
 
             distance = np.linalg.norm(self.Position - samurai_pos)
