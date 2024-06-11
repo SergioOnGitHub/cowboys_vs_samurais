@@ -92,17 +92,15 @@ class OBJ:
     def generate(self):
         self.gl_list = glGenLists(1)
         glNewList(self.gl_list, GL_COMPILE)
-        glEnable(GL_TEXTURE_2D)
-        glFrontFace(GL_CCW)
         for face in self.faces:
             vertices, normals, texture_coords, material = face
 
             mtl = self.mtl[material]
             if 'texture_Kd' in mtl:
-                # use diffuse texmap
+                glEnable(GL_TEXTURE_2D)
                 glBindTexture(GL_TEXTURE_2D, mtl['texture_Kd'])
             else:
-                # just use diffuse colour
+                glDisable(GL_TEXTURE_2D)
                 glColor(*mtl['Kd'])
 
             glBegin(GL_POLYGON)
@@ -113,7 +111,6 @@ class OBJ:
                     glTexCoord2fv(self.texcoords[texture_coords[i] - 1])
                 glVertex3fv(self.vertices[vertices[i] - 1])
             glEnd()
-        glDisable(GL_TEXTURE_2D)
         glEndList()
 
     def render(self):

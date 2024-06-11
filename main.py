@@ -62,7 +62,7 @@ yaw = 0.0
 pitch = 0.0
 playerHitbox = 10
 mouse_sensitivity = 1
-movement_speed = 3
+movement_speed = 3.5
 
 # Board dimension
 DimBoard = 400
@@ -84,14 +84,9 @@ bullets = []
 textures = []
 
 board = "WoodFine0090_1_350.jpg"
-pacman_text = "textures/Pac8bit.bmp"
-#map_text = "textures/red_lines_map.bmp"
-map_text = "textures/clean_map.bmp"
-ghost_red = "textures/Blinky8bit.bmp"
-ghost_pink = "textures/Pinky8bit.bmp"
-ghost_cyan = "textures/Inky8bit.bmp"
-ghost_orange = "textures/Clyde-sue-tim-8bit.bmp"
-
+wNorth = "fuji.png"
+wall = "wall.png"
+roof = "roof.png"
 
 # Initialize Pygame
 pygame.init()
@@ -150,7 +145,10 @@ def Init():
     glEnable(GL_DEPTH_TEST)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-    Textures(board)
+    Textures(board) #0
+    Textures(wNorth) #1
+    Textures(wall) #2
+    Textures(roof) #3
 
     revolver.append(Revolver(revolverScale, get_player_position(), get_player_dir(yaw, pitch)))
     for _ in range(nSamurais):
@@ -183,20 +181,82 @@ def PlanoTexturizado():
     glDisable(GL_TEXTURE_2D)
     
 
+def wallTextureNorth():
+    #Activate textures
+    glColor3f(1.0,1.0,1.0)
+    glEnable(GL_TEXTURE_2D)
+    #front face
+
+    # Paderes
+    # Frontal
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_QUADS)
+    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glVertex3d(-DimBoard, 0, DimBoard)
+    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glVertex3d(-DimBoard, DimBoard, DimBoard)
+    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glVertex3d(DimBoard, DimBoard, DimBoard)
+    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glVertex3d(DimBoard, 0, DimBoard)
+    glEnd()
+
+    glBegin(GL_QUADS)
+    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glVertex3d(-DimBoard, 0, -DimBoard)
+    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glVertex3d(-DimBoard, DimBoard, -DimBoard)
+    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glVertex3d(DimBoard, DimBoard, -DimBoard)
+    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glVertex3d(DimBoard, 0, -DimBoard)
+    glEnd()
+
+    glBegin(GL_QUADS)
+    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glVertex3d(DimBoard, 0, -DimBoard)
+    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glVertex3d(DimBoard, DimBoard, -DimBoard)
+    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glVertex3d(DimBoard, DimBoard, DimBoard)
+    glTexCoord2f(0.0, 1.0)  # Inverti coordenadas de textura verticalmente
+    glVertex3d(DimBoard, 0, DimBoard)
+    glEnd()
+
+    glBindTexture(GL_TEXTURE_2D, textures[3])
+    glBegin(GL_QUADS)
+    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glVertex3d(-DimBoard, 400, -DimBoard)
+    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glVertex3d(-DimBoard, 400, DimBoard)
+    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glVertex3d(DimBoard, 400, DimBoard)
+    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glVertex3d(DimBoard, 400, -DimBoard)
+    glEnd()
+
+
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_QUADS)
+    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glVertex3d(-DimBoard, 0, -DimBoard)
+    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glVertex3d(-DimBoard, DimBoard, -DimBoard)
+    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glVertex3d(-DimBoard, DimBoard, DimBoard)
+    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glVertex3d(-DimBoard, 0, DimBoard)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
+
+
 def display():
     global yaw, pitch
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     PlanoTexturizado()
+    wallTextureNorth()
     Axis()
-
-    # # Draw the gray board
-    # glColor3f(0.3, 0.3, 0.3)
-    # glBegin(GL_QUADS)
-    # glVertex3d(-DimBoard, 0, -DimBoard)
-    # glVertex3d(-DimBoard, 0, DimBoard)
-    # glVertex3d(DimBoard, 0, DimBoard)
-    # glVertex3d(DimBoard, 0, -DimBoard)
-    # glEnd()
 
     # Draw samurais
     for obj in samurais:

@@ -44,10 +44,10 @@ class Revolver:
         angle = math.degrees(math.atan2(self.Direction[0], self.Direction[1]))
         return angle
     
-    def calculateRotationAngleYZ(self):
-        # Calculate the angle in degrees between the direction vector and the positive z-axis in the YZ plane
-        angle = math.degrees(math.atan(self.Direction[1] / self.Direction[2]))  # Using atan for YZ plane
-        return angle
+    # def calculateRotationAngleYZ(self):
+    #     # Calculate the angle in degrees between the direction vector and the positive z-axis in the YZ plane
+    #     angle = math.degrees(math.atan(self.Direction[1] / self.Direction[2]))  # Using atan for YZ plane
+    #     return angle
     
 
     def draw(self, look_at):
@@ -56,15 +56,15 @@ class Revolver:
         glScaled(self.scale,self.scale,self.scale)
         glColor3f(1.0, 1.0, 1.0)
         angleXZ = self.calculateRotationAngleXZ()
-        angleYZ = self.calculateRotationAngleYZ()
-        angleXY = self.calculateRotationAngleXY()
+        # angleYZ = self.calculateRotationAngleYZ()
+        # angleXY = self.calculateRotationAngleXY()
         glRotatef(angleXZ - 90, 0.0, 1.0, 0.0)
         pitch = math.degrees(look_at)
         glRotatef(pitch - 140.2, 0.0, 0.0, 1.0)
 
-        print("Angle YZ: ", angleYZ)
-        print("Angle XY: ", angleXY)
-        print()
+        # print("Angle YZ: ", angleYZ)
+        # print("Angle XY: ", angleXY)
+        # print()
         # glRotatef(angleYZ, 1.0, 0.0, 0.0)
         # Angle YZ:  -1.0306071244579675
         # Angle XY:  85.87316606283942

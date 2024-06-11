@@ -17,7 +17,7 @@ class Bullet:
             [-1.0,  1.0,  1.0], [ 1.0,  1.0,  1.0], [ 1.0,  1.0, -1.0], [-1.0,  1.0, -1.0]
         ])
         self.hitbox = 1
-        self.vel = 8
+        self.vel = 10
         self.DimBoard = dim
 
         self.Position = np.array(playerPos)
@@ -43,8 +43,6 @@ class Bullet:
             distance = np.linalg.norm(self.Position - samurai_pos)
             if distance < self.hitbox + samurai_hitbox:
                 self.existence = False
-                print("Collision detected: ", self.Position)
-                print("Distance: ", distance)
                 samurai.on_hit()  # Assuming samurais have an on_hit method
                 break
 
@@ -54,7 +52,6 @@ class Bullet:
             self.Position += self.Direction
             if np.any(np.abs(self.Position) > self.DimBoard):
                 self.existence = False
-                print("Position at boundary collision: ", self.Position)
             self.collisionDetection()
 
     def drawFaces(self):
@@ -98,7 +95,7 @@ class Bullet:
     def draw(self):
         glPushMatrix()
         glTranslatef(self.Position[0], self.Position[1], self.Position[2])
-        glScaled(0.5, 0.5, 0.5)
+        glScaled(0.3, 0.3, 0.3)
         glColor3f(1, 1, 0)
         self.drawFaces()
         glPopMatrix()

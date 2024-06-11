@@ -1,0 +1,105 @@
+def PlanoTexturizado():
+    # Activar texturas
+    glColor3f(1.0, 1.0, 1.0)
+    glEnable(GL_TEXTURE_2D)
+
+    # Frontal
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_QUADS)
+
+    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glVertex3d(-DimBoardpared, -DimBoardpared + 200, DimBoardpared)
+
+    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glVertex3d(-DimBoardpared, DimBoardpared + 200, DimBoardpared)
+
+    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glVertex3d(DimBoardpared, DimBoardpared + 200, DimBoardpared)
+
+    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glVertex3d(DimBoardpared, -DimBoardpared + 200, DimBoardpared)
+
+    glEnd()
+
+    glBegin(GL_QUADS)
+
+    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glVertex3d(-DimBoardpared, -DimBoardpared + 200, -DimBoardpared)
+
+    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glVertex3d(-DimBoardpared, DimBoardpared + 200, -DimBoardpared)
+
+    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glVertex3d(DimBoardpared, DimBoardpared + 200, -DimBoardpared)
+
+    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glVertex3d(DimBoardpared, -DimBoardpared + 200, -DimBoardpared)
+
+    glEnd()
+
+    glBegin(GL_QUADS)
+
+    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glVertex3d(DimBoardpared, -DimBoardpared + 200, -DimBoardpared)
+
+    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glVertex3d(DimBoardpared, DimBoardpared + 200, -DimBoardpared)
+
+    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glVertex3d(DimBoardpared, DimBoardpared + 200, DimBoardpared)
+
+    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glVertex3d(DimBoardpared, -DimBoardpared + 200, DimBoardpared)
+
+    glEnd()
+
+    glBegin(GL_QUADS)
+
+    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glVertex3d(-DimBoardpiso, 400, -DimBoardpiso)
+
+    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glVertex3d(-DimBoardpiso, 400, DimBoardpiso)
+
+    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glVertex3d(DimBoardpiso, 400, DimBoardpiso)
+
+    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glVertex3d(DimBoardpiso, 400, -DimBoardpiso)
+
+    glEnd()
+
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_QUADS)
+
+    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glVertex3d(-DimBoardpared, -DimBoardpared + 200, -DimBoardpared)
+
+    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glVertex3d(-DimBoardpared, DimBoardpared + 200, -DimBoardpared)
+
+    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glVertex3d(-DimBoardpared, DimBoardpared + 200, DimBoardpared)
+
+    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glVertex3d(-DimBoardpared, -DimBoardpared + 200, DimBoardpared)
+
+    glEnd()
+
+    glBindTexture(GL_TEXTURE_2D, textures[2])
+    glBegin(GL_QUADS)
+
+    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glVertex3d(-DimBoardpiso, 0, -DimBoardpiso)
+
+    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glVertex3d(-DimBoardpiso, 0, DimBoardpiso)
+
+    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glVertex3d(DimBoardpiso, 0, DimBoardpiso)
+
+    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glVertex3d(DimBoardpiso, 0, -DimBoardpiso)
+
+    glEnd()
+    glDisable(GL_TEXTURE_2D)
