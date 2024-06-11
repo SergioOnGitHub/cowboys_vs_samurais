@@ -79,6 +79,20 @@ revolverScale = 0.5
 # Bullets
 bullets = []
 
+
+#Arreglo para el manejo de texturas
+textures = []
+
+board = "WoodFine0090_1_350.jpg"
+pacman_text = "textures/Pac8bit.bmp"
+#map_text = "textures/red_lines_map.bmp"
+map_text = "textures/clean_map.bmp"
+ghost_red = "textures/Blinky8bit.bmp"
+ghost_pink = "textures/Pinky8bit.bmp"
+ghost_cyan = "textures/Inky8bit.bmp"
+ghost_orange = "textures/Clyde-sue-tim-8bit.bmp"
+
+
 # Initialize Pygame
 pygame.init()
 
@@ -106,6 +120,19 @@ def Axis():
     glEnd()
     glLineWidth(1.0)
 
+def Textures(filepath):
+    textures.append(glGenTextures(1))
+    id = len(textures) - 1
+    glBindTexture(GL_TEXTURE_2D, textures[id])
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP)
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_CLAMP)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    image = pygame.image.load(filepath).convert()
+    w, h = image.get_rect().size
+    image_data = pygame.image.tostring(image,"RGBA")
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data)
+    glGenerateMipmap(GL_TEXTURE_2D) 
 
 def Init():
     screen = pygame.display.set_mode(
@@ -123,6 +150,7 @@ def Init():
     glEnable(GL_DEPTH_TEST)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
+    Textures(board)
 
     revolver.append(Revolver(revolverScale, get_player_position(), get_player_dir(yaw, pitch)))
     for _ in range(nSamurais):
@@ -135,21 +163,40 @@ def Init():
     glEnable(GL_LIGHT0)
     glEnable(GL_COLOR_MATERIAL)
     glShadeModel(GL_SMOOTH)
+
+def PlanoTexturizado():
+    #Activate textures
+    glColor3f(1.0,1.0,1.0)
+    glEnable(GL_TEXTURE_2D)
+    #front face
+    glBindTexture(GL_TEXTURE_2D, textures[0])
+    glBegin(GL_QUADS)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3d(-DimBoard, 0, -DimBoard)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3d(DimBoard, 0, -DimBoard)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3d(DimBoard, 0, DimBoard)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3d(-DimBoard, 0, DimBoard)
+    glEnd()              
+    glDisable(GL_TEXTURE_2D)
     
 
 def display():
     global yaw, pitch
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    PlanoTexturizado()
     Axis()
 
-    # Draw the gray board
-    glColor3f(0.3, 0.3, 0.3)
-    glBegin(GL_QUADS)
-    glVertex3d(-DimBoard, 0, -DimBoard)
-    glVertex3d(-DimBoard, 0, DimBoard)
-    glVertex3d(DimBoard, 0, DimBoard)
-    glVertex3d(DimBoard, 0, -DimBoard)
-    glEnd()
+    # # Draw the gray board
+    # glColor3f(0.3, 0.3, 0.3)
+    # glBegin(GL_QUADS)
+    # glVertex3d(-DimBoard, 0, -DimBoard)
+    # glVertex3d(-DimBoard, 0, DimBoard)
+    # glVertex3d(DimBoard, 0, DimBoard)
+    # glVertex3d(DimBoard, 0, -DimBoard)
+    # glEnd()
 
     # Draw samurais
     for obj in samurais:
