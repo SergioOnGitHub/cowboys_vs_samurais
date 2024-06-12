@@ -11,7 +11,6 @@ import math
 
 class Bullet:
     def __init__(self, dim, samurais, playerPos, playerDir, shooting_sound):
-        # Initialize the coordinates of the cube vertices
         self.points = np.array([
             [-1.0, -1.0,  1.0], [ 1.0, -1.0,  1.0], [ 1.0, -1.0, -1.0], [-1.0, -1.0, -1.0],
             [-1.0,  1.0,  1.0], [ 1.0,  1.0,  1.0], [ 1.0,  1.0, -1.0], [-1.0,  1.0, -1.0]
@@ -43,7 +42,7 @@ class Bullet:
             distance = np.linalg.norm(self.Position - samurai_pos)
             if distance < self.hitbox + samurai_hitbox:
                 self.existence = False
-                samurai.on_hit()  # Assuming samurais have an on_hit method
+                samurai.on_hit()
                 break
 
 

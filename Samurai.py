@@ -25,14 +25,14 @@ class Samurai:
         self.player_collision = False
         self.bullet_collision = False
         self.existence = True
-        self.activation_zone = 150
+        self.activation_zone = 200
         self.obj = OBJ("Samurai_low_poly.obj", swapyz=True)
         self.obj.generate()
 
 
     def generate_position_near_border(self):
-        x = random.randint(self.DimBoard * 0.5, self.DimBoard) * random.choice([1, -1])
-        z = random.randint(self.DimBoard *0.5, self.DimBoard) * random.choice([1, -1])
+        x = random.randint(self.DimBoard * 0.5, self.DimBoard -10) * random.choice([1, -1])
+        z = random.randint(self.DimBoard *0.5, self.DimBoard - 10) * random.choice([1, -1])
         return [x, 0, z]
 
 
@@ -47,12 +47,9 @@ class Samurai:
         self.existence = False
         print("Samurai hit!")
 
-        # Handle what happens when the samurai is hit
-
     def collisionDetection(self, playerPosition, playerHitbox):
         distance = np.linalg.norm(self.get_position() - playerPosition)
         if distance < self.hitbox + playerHitbox:
-            print("Player has lost")
             return True
         return False
         
@@ -81,10 +78,10 @@ class Samurai:
             else:
                 self.Direction[2] *= -1.0
                 self.Position[2] += self.Direction[2]
-        self.collisionDetection(playerPosition, playerHitbox)
+
 
     def calculateRotationAngle(self):
-        # Calculate the angle in degrees between the direction vector and the positive z-axis
+    # Calcular el ángulo en grados entre el vector de dirección y el eje z positivo
         angle = math.degrees(math.atan2(self.Direction[0], self.Direction[2]))
         return angle
     
@@ -96,8 +93,6 @@ class Samurai:
         angle = self.calculateRotationAngle()
         glRotatef(angle - 180, 0.0, 1.0, 0.0)
         glRotatef(-90.0, 1.0, 0.0, 0.0)
-        # glTranslatef(0.0, 0.0, 15.0)
-        # glScale(0.01, 0.01, 0.01)
         self.obj.render()
         glPopMatrix()
         

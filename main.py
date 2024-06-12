@@ -30,7 +30,7 @@ shooting_sound = pygame.mixer.Sound("gun_shot.mp3")
 shooting_sound.set_volume(0.5)  # Set the volume for the sound effect
 
 # Screen settings
-screen_width = 1000
+screen_width = 1400
 screen_height = 800
 
 # Camera settings
@@ -49,27 +49,20 @@ UP_X = 0
 UP_Y = 1
 UP_Z = 0
 
-# Axes limits
-X_MIN = -500
-X_MAX = 500
-Y_MIN = -500
-Y_MAX = 500
-Z_MIN = -500
-Z_MAX = 500
-
 # Camera movement settings
 yaw = 0.0
 pitch = 0.0
 playerHitbox = 10
 mouse_sensitivity = 1
 movement_speed = 3.5
+health = 100
 
 # Board dimension
-DimBoard = 400
+DimBoard = 300
 
 # Samurai settings
 samurais = []
-nSamurais = 20
+nSamurais = 1 #25
 samurai_scale = 0.05
 
 # Bullets
@@ -90,30 +83,6 @@ roof = "roof.png"
 
 # Initialize Pygame
 pygame.init()
-
-
-def Axis():
-    glShadeModel(GL_FLAT)
-    glLineWidth(3.0)
-    #X axis in red
-    glColor3f(1.0,0.0,0.0)
-    glBegin(GL_LINES)
-    glVertex3f(X_MIN,0.0,0.0)
-    glVertex3f(X_MAX,0.0,0.0)
-    glEnd()
-    #Y axis in green
-    glColor3f(0.0,1.0,0.0)
-    glBegin(GL_LINES)
-    glVertex3f(0.0,Y_MIN,0.0)
-    glVertex3f(0.0,Y_MAX,0.0)
-    glEnd()
-    #Z axis in blue
-    glColor3f(0.0,0.0,1.0)
-    glBegin(GL_LINES)
-    glVertex3f(0.0,0.0,Z_MIN)
-    glVertex3f(0.0,0.0,Z_MAX)
-    glEnd()
-    glLineWidth(1.0)
 
 def Textures(filepath):
     textures.append(glGenTextures(1))
@@ -166,7 +135,7 @@ def PlanoTexturizado():
     #Activate textures
     glColor3f(1.0,1.0,1.0)
     glEnable(GL_TEXTURE_2D)
-    #front face
+
     glBindTexture(GL_TEXTURE_2D, textures[0])
     glBegin(GL_QUADS)
     glTexCoord2f(0.0, 0.0)
@@ -181,82 +150,81 @@ def PlanoTexturizado():
     glDisable(GL_TEXTURE_2D)
     
 
-def wallTextureNorth():
+def wallTexture():
     #Activate textures
     glColor3f(1.0,1.0,1.0)
     glEnable(GL_TEXTURE_2D)
-    #front face
 
-    # Paderes
-    # Frontal
+    # Paderes, texture "wall.png"
     glBindTexture(GL_TEXTURE_2D, textures[2])
     glBegin(GL_QUADS)
-    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glTexCoord2f(1.0, 1.0)
     glVertex3d(-DimBoard, 0, DimBoard)
-    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glTexCoord2f(1.0, 0.0)
     glVertex3d(-DimBoard, DimBoard, DimBoard)
-    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glTexCoord2f(0.0, 0.0)
     glVertex3d(DimBoard, DimBoard, DimBoard)
-    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glTexCoord2f(0.0, 1.0)
     glVertex3d(DimBoard, 0, DimBoard)
     glEnd()
 
     glBegin(GL_QUADS)
-    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glTexCoord2f(1.0, 1.0)
     glVertex3d(-DimBoard, 0, -DimBoard)
-    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glTexCoord2f(1.0, 0.0)
     glVertex3d(-DimBoard, DimBoard, -DimBoard)
-    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glTexCoord2f(0.0, 0.0)
     glVertex3d(DimBoard, DimBoard, -DimBoard)
-    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glTexCoord2f(0.0, 1.0)
     glVertex3d(DimBoard, 0, -DimBoard)
     glEnd()
 
     glBegin(GL_QUADS)
-    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glTexCoord2f(1.0, 1.0)
     glVertex3d(DimBoard, 0, -DimBoard)
-    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glTexCoord2f(1.0, 0.0)
     glVertex3d(DimBoard, DimBoard, -DimBoard)
-    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glTexCoord2f(0.0, 0.0)
     glVertex3d(DimBoard, DimBoard, DimBoard)
-    glTexCoord2f(0.0, 1.0)  # Inverti coordenadas de textura verticalmente
+    glTexCoord2f(0.0, 1.0)
     glVertex3d(DimBoard, 0, DimBoard)
     glEnd()
 
+    # Techo texture "roof.png"
     glBindTexture(GL_TEXTURE_2D, textures[3])
     glBegin(GL_QUADS)
-    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
-    glVertex3d(-DimBoard, 400, -DimBoard)
-    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
-    glVertex3d(-DimBoard, 400, DimBoard)
-    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
-    glVertex3d(DimBoard, 400, DimBoard)
-    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
-    glVertex3d(DimBoard, 400, -DimBoard)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3d(-DimBoard, DimBoard, -DimBoard)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3d(-DimBoard, DimBoard, DimBoard)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3d(DimBoard, DimBoard, DimBoard)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3d(DimBoard, DimBoard, -DimBoard)
     glEnd()
 
-
+    # Paderes, texture "fuji.png"
     glBindTexture(GL_TEXTURE_2D, textures[1])
     glBegin(GL_QUADS)
-    glTexCoord2f(1.0, 1.0)  # Invertir coordenadas de textura horizontalmente y verticalmente
+    glTexCoord2f(1.0, 1.0)
     glVertex3d(-DimBoard, 0, -DimBoard)
-    glTexCoord2f(1.0, 0.0)  # Invertir coordenadas de textura horizontalmente
+    glTexCoord2f(1.0, 0.0)
     glVertex3d(-DimBoard, DimBoard, -DimBoard)
-    glTexCoord2f(0.0, 0.0)  # No invertir coordenadas de textura
+    glTexCoord2f(0.0, 0.0)  
     glVertex3d(-DimBoard, DimBoard, DimBoard)
-    glTexCoord2f(0.0, 1.0)  # Invertir coordenadas de textura verticalmente
+    glTexCoord2f(0.0, 1.0)  
     glVertex3d(-DimBoard, 0, DimBoard)
     glEnd()
 
     glDisable(GL_TEXTURE_2D)
 
 
+
 def display():
-    global yaw, pitch
+    global yaw, pitch, health
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     PlanoTexturizado()
-    wallTextureNorth()
-    Axis()
+    # wallTexture()
 
     # Draw samurais
     for obj in samurais:
@@ -266,6 +234,12 @@ def display():
         elif not obj.existence:
             samurais.remove(obj)
             print("Number of samurais: ", len(samurais))
+            print()
+
+        if(health > 0 and obj.collisionDetection(get_player_position(), playerHitbox)):
+            # health -= 4
+            print("Player Health: ", health)
+            print()
             
     revolver[0].update(get_player_position(), get_player_dir(yaw, pitch))
     revolver[0].draw(look_at[1])
@@ -312,7 +286,6 @@ def handle_keyboard():
     global EYE_X, EYE_Y, EYE_Z, yaw, pitch
     keys = pygame.key.get_pressed()
     
-    # Calculate forward and right vectors
     radians_yaw = math.radians(yaw)
     cos_yaw = math.cos(radians_yaw)
     sin_yaw = math.sin(radians_yaw)
@@ -324,17 +297,21 @@ def handle_keyboard():
     right_z = cos_yaw
     
     if keys[pygame.K_w] or keys[pygame.K_UP]:  # Forward
-        EYE_X += forward_x * movement_speed
-        EYE_Z += forward_z * movement_speed
+        if((abs(EYE_X + forward_x * movement_speed)) < DimBoard and abs(EYE_Z + forward_z * movement_speed) < DimBoard):
+            EYE_X += forward_x * movement_speed
+            EYE_Z += forward_z * movement_speed
     if keys[pygame.K_s] or keys[pygame.K_DOWN]:  # Backward
-        EYE_X -= forward_x * movement_speed
-        EYE_Z -= forward_z * movement_speed
+        if((abs(EYE_X - forward_x * movement_speed)) < DimBoard and abs(EYE_Z - forward_z * movement_speed) < DimBoard):
+            EYE_X -= forward_x * movement_speed
+            EYE_Z -= forward_z * movement_speed
     if keys[pygame.K_a] or keys[pygame.K_LEFT]:  # Left
-        EYE_X -= right_x * movement_speed
-        EYE_Z -= right_z * movement_speed
+        if((abs(EYE_X - right_x * movement_speed)) < DimBoard and abs(EYE_Z - right_z * movement_speed) < DimBoard):
+            EYE_X -= right_x * movement_speed
+            EYE_Z -= right_z * movement_speed
     if keys[pygame.K_d] or keys[pygame.K_RIGHT]:  # Right
-        EYE_X += right_x * movement_speed
-        EYE_Z += right_z * movement_speed
+        if((abs(EYE_X + right_x * movement_speed)) < DimBoard and abs(EYE_Z + right_z * movement_speed) < DimBoard):
+            EYE_X += right_x * movement_speed
+            EYE_Z += right_z * movement_speed
 
 
 rotate = False
@@ -372,6 +349,26 @@ while not done:
     gluLookAt(EYE_X, EYE_Y, EYE_Z, look_at[0], look_at[1], look_at[2], UP_X, UP_Y, UP_Z)
 
     display()
+
+
+    # Condiciones de victoria y derrota
+    if(len(samurais) <= 0):
+        done = True
+        print()
+        print("####################")
+        print()
+        print("YOU WIN")
+        print()
+        print("####################")
+
+    elif(health <= 0):
+        done = True
+        print()
+        print("####################")
+        print()
+        print("YOU LOSE")
+        print()
+        print("####################")
 
     pygame.display.flip()
     pygame.time.wait(10)
