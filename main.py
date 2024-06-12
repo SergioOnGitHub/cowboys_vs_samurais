@@ -30,8 +30,8 @@ shooting_sound = pygame.mixer.Sound("gun_shot.mp3")
 shooting_sound.set_volume(0.5)  # Set the volume for the sound effect
 
 # Screen settings
-screen_width = 1400
-screen_height = 800
+screen_width = 1000
+screen_height = 600
 
 # Camera settings
 FOVY = 60.0
@@ -314,7 +314,7 @@ def handle_keyboard():
             EYE_Z += right_z * movement_speed
 
 
-rotate = False
+rotate = True
 done = False
 Init()
 
@@ -325,12 +325,12 @@ while not done:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 done = True
-        if event.type == MOUSEBUTTONDOWN:
-            if event.button == 3:
-                rotate = True
-        elif event.type == MOUSEBUTTONUP:
-            if event.button == 3:
-                rotate = False
+        # if event.type == MOUSEBUTTONDOWN:
+        #     if event.button == 3:
+        #         rotate = True
+        # elif event.type == MOUSEBUTTONUP:
+        #     if event.button == 3:
+        #         rotate = False
         if event.type == MOUSEMOTION:
             if rotate:
                 i, j = event.rel
