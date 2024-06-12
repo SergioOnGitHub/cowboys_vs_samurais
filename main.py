@@ -52,7 +52,7 @@ UP_Z = 0
 # Camera movement settings
 yaw = 0.0
 pitch = 0.0
-playerHitbox = 10
+playerHitbox = 13
 mouse_sensitivity = 1
 movement_speed = 3.5
 health = 100
@@ -62,7 +62,7 @@ DimBoard = 300
 
 # Samurai settings
 samurais = []
-nSamurais = 1 #25
+nSamurais = 25
 samurai_scale = 0.05
 
 # Bullets
@@ -224,7 +224,7 @@ def display():
     global yaw, pitch, health
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     PlanoTexturizado()
-    # wallTexture()
+    wallTexture()
 
     # Draw samurais
     for obj in samurais:
@@ -237,7 +237,7 @@ def display():
             print()
 
         if(health > 0 and obj.collisionDetection(get_player_position(), playerHitbox)):
-            # health -= 4
+            health -= 5
             print("Player Health: ", health)
             print()
             

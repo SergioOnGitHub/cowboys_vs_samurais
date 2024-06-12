@@ -60,20 +60,31 @@ class Samurai:
         
     def update(self, playerPosition, playerDirection, playerHitbox):
         if self.activate_zone(np.array(playerPosition)):
-            self.Direction = np.array(playerDirection) * -1
-            self.Direction /= np.linalg.norm(self.Direction)
-            self.Direction *= self.vel
-            self.Position[0] += self.Direction[0]
-            self.Position[2] += self.Direction[2]
+            distance = np.linalg.norm(self.get_position() - playerPosition)
+            tempDir = np.array(playerDirection) * -1
+            tempDir /= np.linalg.norm(self.Direction)
+            tempDir *= self.vel
+            tempPosX = self.Position[0] + tempDir[0]
+            tempPosZ = self.Position[2] + tempDir[2]
+
+            if (abs(tempPosX) < self.DimBoard and abs(tempPosZ) < self.DimBoard and distance > self.hitbox + playerHitbox):
+                self.Direction = np.array(playerDirection) * -1
+                self.Direction /= np.linalg.norm(self.Direction)
+                self.Direction *= self.vel
+                self.Position[0] += self.Direction[0]
+                self.Position[2] += self.Direction[2]
+
+
         else:
             new_x = self.Position[0] + self.Direction[0]
             new_z = self.Position[2] + self.Direction[2]
-            if abs(new_x) <= self.DimBoard:
+            if abs(new_x) < self.DimBoard:
                 self.Position[0] = new_x
             else:
+
                 self.Direction[0] *= -1.0
                 self.Position[0] += self.Direction[0]
-            if abs(new_z) <= self.DimBoard:
+            if abs(new_z) < self.DimBoard:
                 self.Position[2] = new_z
             else:
                 self.Direction[2] *= -1.0
